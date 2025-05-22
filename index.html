@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>反关财经 - TRUMPOFFICIAL加密货币分析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-icons@0.309.0/dist/umd/lucide-icons.js">
+    <style>
+        /* 浮动特朗普图片 */
+        .floating-trump {
+            position: fixed;
+            z-index: 50;
+            pointer-events: auto; /* 允许点击 */
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.5s ease-in, transform 0.3s ease, filter 0.3s ease;
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
+            object-fit: cover; /* 确保图片适当裁剪 */
+        }
+        
+        .floating-trump:hover {
+            transform: scale(1.1) !important;
+            filter: brightness(1.2) drop-shadow(0 0 15px rgba(255, 215, 0, 0.8)) !important;
+        }
+        
+        .floating-trump.active {
+            animation: floatAround 10s linear infinite, pulse 3s ease-in-out infinite alternate;
+            opacity: 0.85;
+        }
+        
+        @keyframes floatAround {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translate(20px, -15px) rotate(5deg) scale(1.05);
+            }
+            50% {
+                transform: translate(-10px, 20px) rotate(-5deg) scale(0.95);
+            }
+            75% {
+                transform: translate(-15px, -10px) rotate(3deg) scale(1.02);
+            }
+            100% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+        }
+        
+        /* 特朗普图片特殊效果 */
+        .trump-effect1 {
+            animation-duration: 12s !important;
+            animation-timing-function: ease-in-out !important;
+        }
+        
+        .trump-effect2 {
+            animation-delay: 2s !important;
+            animation-duration: 15s !important;
+        }
+        
+        /* 自定义社交媒体图标样式 */
+        .social-icon {
+            transition: transform 0.3s ease, color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #f5f5f5;
+        }
+        
+        .social-icon:hover {
+            transform: scale(1.15);
+        }
+        
+        /* 自定义各平台悬停颜色 - 金色主题 */
+        .bilibili-icon:hover {
+            color: #FFD700 !important;
+        }
+        
+        .twitter-icon:hover {
+            color: #FFD700 !important;
+        }
+        
+        .youtube-icon:hover {
+            color: #FFD700 !important;
+        }
+        
+        .douyin-icon:hover {
+            color: #FFD700 !important;
+        }
+        
+        .kuaishou-icon:hover {
+            color: #FFD700 !important;
+        }
+        
+        .weibo-icon:hover {
+            color: #FFD700 !important;
+        }
+
+        /* 掉落PEPE动画 */
+        @keyframes fallDown {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                transform: translateY(5px) translateX(0) rotate(36deg) scale(1.2);
+                opacity: 1;
+            }
+            20% {
+                transform: translateY(25px) translateX(0) rotate(72deg) scale(1);
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(calc(100vh)) translateX(0) rotate(360deg) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        /* 掉落动画 */
+        @keyframes sway {
+            0% { transform: translateX(-20px); }
+            50% { transform: translateX(20px); }
+            100% { transform: translateX(-20px); }
+        }
+
+        .falling-crypto {
+            position: fixed;
+            z-index: 1000;
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+            will-change: transform, opacity;
+            transform-origin: center center;
+        }
+
+        /* 提示消息样式 */
+        .follow-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #FFD700, #DAA520);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 8px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            z-index: 1001;
+            opacity: 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+
+        .follow-message.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        /* 发财字体特效 */
+        .highlight {
+            color: #FFD700;
+            font-weight: bold;
+            display: inline-block;
+            animation: pulse 1s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+            }
+            100% {
+                transform: scale(1.1);
+                text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            }
+        }
+        
+        /* 特朗普图片闪光效果 */
+        .floating-trump::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(255,215,0,0) 0%, 
+                rgba(255,215,0,0.4) 50%, 
+                rgba(255,215,0,0) 100%);
+            background-size: 200% 200%;
+            animation: trumpShimmer 3s ease-in-out infinite;
+            border-radius: 10px;
+            pointer-events: none;
+        }
+        
+        @keyframes trumpShimmer {
+            0% { background-position: -200% -200%; }
+            50% { background-position: 200% 200%; }
+            100% { background-position: -200% -200%; }
+        }
+
+        @keyframes progressShimmer {
+            0% {
+                background-position: -100% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+        
+        .progress-animate {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-animate::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0) 0%, 
+                rgba(255,255,255,0.4) 50%, 
+                rgba(255,255,255,0) 100%);
+            background-size: 200% 100%;
+            animation: progressShimmer 2s infinite linear;
+            pointer-events: none;
+        }
+
+        .trump-pattern-bg {
+            background-color: #FFFAF0;
+            background-image: url('pepe.svg');
+            background-size: 24px 24px;
+            background-repeat: repeat;
+            background-position: center;
+            position: relative;
+            animation: slideBg 60s linear infinite;
+        }
+        
+        @keyframes slideBg {
+            from { background-position: 0 0; }
+            to { background-position: 500px 500px; }
+        }
+        
+        .trump-pattern-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 250, 240, 0.8);
+            z-index: 1;
+        }
+        
+        .trump-pattern-bg img {
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.8));
+            animation: pulse-trump 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse-trump {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+        
+
+    </style>
+</head>
+<body class="bg-white text-gray-900 min-h-screen flex flex-col">
+    <!-- 音乐播放器 -->
+    <audio id="backgroundMusic" loop>
+        <source src="YMCA (Lyrics).mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+    
+    <!-- 音乐控制按钮 -->
+    <div class="fixed bottom-4 right-4 z-50 bg-amber-100 rounded-full p-3 shadow-lg cursor-pointer" id="musicToggle">
+        <i class="fas fa-music text-amber-600" id="musicIcon"></i>
+    </div>
+    
+    <!-- 防止缩放 -->
+    <!-- 浮动特朗普图片容器 -->
+    <div id="trumpImageContainer"></div>
+    
+    <script>
+        window.addEventListener("wheel", (e)=> {
+            const isPinching = e.ctrlKey
+            if(isPinching) e.preventDefault()
+        }, { passive: false })
+        
+        // 特朗普图片随机浮动效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const trumpImageContainer = document.getElementById('trumpImageContainer');
+            const trumpImages = ['t1.jpg', 't2.jpg'];
+            const maxImages = 5; // 最大同时显示的图片数量
+            let activeImages = 0;
+            
+            // 创建新特朗普图片函数
+            function createRandomTrump() {
+                // 控制最大图片数量
+                if (activeImages >= maxImages) return;
+                
+                // 随机选择图片
+                const randomImg = trumpImages[Math.floor(Math.random() * trumpImages.length)];
+                
+                // 创建图片元素
+                const imgElement = document.createElement('img');
+                imgElement.src = randomImg;
+                imgElement.classList.add('floating-trump');
+                
+                // 随机图片尺寸 (80px - 150px)
+                const size = Math.floor(Math.random() * 70) + 80;
+                imgElement.style.width = `${size}px`;
+                imgElement.style.height = `${size}px`;
+                
+                // 随机位置
+                const posX = Math.floor(Math.random() * (window.innerWidth - size));
+                const posY = Math.floor(Math.random() * (window.innerHeight - size));
+                imgElement.style.left = `${posX}px`;
+                imgElement.style.top = `${posY}px`;
+                
+                // 添加随机效果类与旋转
+                if (Math.random() > 0.5) {
+                    imgElement.classList.add('trump-effect1');
+                } else {
+                    imgElement.classList.add('trump-effect2');
+                }
+                
+                // 随机旋转角度
+                const rotation = Math.floor(Math.random() * 20) - 10; // -10度到10度
+                imgElement.style.transform = `rotate(${rotation}deg)`;
+                
+                // 添加边框和圆角
+                imgElement.style.border = '2px solid #FFD700';
+                imgElement.style.borderRadius = '10px';
+                
+                // 添加到容器
+                trumpImageContainer.appendChild(imgElement);
+                
+                // 激活动画
+                setTimeout(() => {
+                    imgElement.classList.add('active');
+                }, 100);
+                
+                activeImages++;
+                
+                // 添加点击效果
+                imgElement.addEventListener('click', function() {
+                    // 闪光效果
+                    this.style.filter = 'brightness(1.5) drop-shadow(0 0 20px gold)';
+                    setTimeout(() => {
+                        this.style.opacity = '0';
+                        setTimeout(() => {
+                            trumpImageContainer.removeChild(this);
+                            activeImages--;
+                            // 点击后立即创建新图片
+                            setTimeout(createRandomTrump, 500);
+                        }, 500);
+                    }, 300);
+                });
+                
+                // 设置图片消失时间
+                const duration = Math.floor(Math.random() * 10000) + 5000; // 5-15秒
+                setTimeout(() => {
+                    imgElement.style.opacity = '0';
+                    setTimeout(() => {
+                        if (imgElement.parentNode === trumpImageContainer) {
+                            trumpImageContainer.removeChild(imgElement);
+                            activeImages--;
+                        }
+                    }, 500);
+                }, duration);
+            }
+            
+            // 启动定时器定期创建图片
+            function startTrumpGenerator() {
+                // 初始创建一个图片
+                createRandomTrump();
+                
+                // 设置随机间隔创建图片
+                setInterval(() => {
+                    if (Math.random() > 0.4) { // 60%的概率创建新图片
+                        createRandomTrump();
+                    }
+                }, 3000); // 每3秒检查一次是否创建新图片
+            }
+            
+            // 启动图片生成器
+            startTrumpGenerator();
+        });
+        
+        // 音乐播放控制
+        document.addEventListener('DOMContentLoaded', function() {
+            const music = document.getElementById('backgroundMusic');
+            const musicToggle = document.getElementById('musicToggle');
+            const musicIcon = document.getElementById('musicIcon');
+            let isPlaying = false;
+            
+            // 尝试自动播放
+            try {
+                // 用户交互后尝试播放
+                document.addEventListener('click', function initialPlay() {
+                    music.play().then(() => {
+                        isPlaying = true;
+                        musicIcon.classList.remove('fa-music');
+                        musicIcon.classList.add('fa-pause');
+                        document.removeEventListener('click', initialPlay);
+                    }).catch(error => {
+                        console.log('自动播放失败:', error);
+                    });
+                }, {once: true});
+                
+                // 也尝试直接播放
+                music.play().then(() => {
+                    isPlaying = true;
+                    musicIcon.classList.remove('fa-music');
+                    musicIcon.classList.add('fa-pause');
+                }).catch(error => {
+                    console.log('自动播放失败，需要用户交互:', error);
+                });
+            } catch (error) {
+                console.log('播放错误:', error);
+            }
+            
+            // 音乐控制按钮点击事件
+            musicToggle.addEventListener('click', function() {
+                if (isPlaying) {
+                    music.pause();
+                    musicIcon.classList.remove('fa-pause');
+                    musicIcon.classList.add('fa-music');
+                } else {
+                    music.play();
+                    musicIcon.classList.remove('fa-music');
+                    musicIcon.classList.add('fa-pause');
+                }
+                isPlaying = !isPlaying;
+            });
+        });
+    </script>
+    
+    <!-- 导航栏 -->
+    <header class="border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <a href="#" class="flex items-center">
+                    <img src="pepe.svg" alt="TRUMP" class="w-10 h-10 mr-2">
+                    <h1 class="text-2xl font-bold">反关财经</h1>
+                </a>
+                <span class="text-sm text-gray-500 px-2 py-1 border border-gray-200 rounded-md">专业加密资产分析</span>
+            </div>
+            
+            <!-- 右侧社交媒体图标和链接 -->
+            <div class="flex items-center space-x-4">
+                <!-- 
+                    量化简介和算法教程链接
+                    请根据需要修改以下链接指向实际的页面：
+                    - 量化简介: https://www.bilibili.com/video/BV19V9qYTE4G/?vd_source=41c6120442315961ee3af89fa3459874
+                    - 算法教程: https://www.bilibili.com/video/BV19V9qYTE4G/?vd_source=41c6120442315961ee3af89fa3459874
+                -->
+                <div class="hidden md:flex items-center space-x-4 mr-2">
+                    <a href="https://www.bilibili.com/video/BV19V9qYTE4G/?vd_source=41c6120442315961ee3af89fa3459874" class="text-gray-700 hover:text-blue-600 transition-colors duration-300 flex items-center font-medium">
+                        <i class="fas fa-chart-line mr-1"></i> 量化简介
+                    </a>
+                    <a href="https://www.bilibili.com/video/BV19V9qYTE4G/?vd_source=41c6120442315961ee3af89fa3459874" class="text-gray-700 hover:text-blue-600 transition-colors duration-300 flex items-center font-medium">
+                        <i class="fas fa-code mr-1"></i> 算法教程
+                    </a>
+                </div>
+                
+                <!-- 社交媒体图标和链接 -->
+                <div class="flex items-center space-x-3">
+                    <!-- 哔哩哔哩 -->
+                    <a href="https://space.bilibili.com/36229149" target="_blank" title="哔哩哔哩" class="social-icon bilibili-icon text-gray-600">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906L17.813 4.653zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773H5.333zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z" />
+                        </svg>
+                    </a>
+                    
+                    <!-- X/推特 -->
+                    <a href="https://x.com/Crypto_Hdy" target="_blank" title="推特" class="social-icon twitter-icon text-gray-600">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                    </a>
+                    
+                    <!-- 油管/YouTube -->
+                    <a href="https://www.youtube.com/@fanguancaijing" target="_blank" title="YouTube" class="social-icon youtube-icon text-gray-600">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                        </svg>
+                    </a>
+                    
+                    <!-- 抖音 -->
+                    <a href="https://www.douyin.com/user/YOUR_ACCOUNT" target="_blank" title="抖音" class="social-icon douyin-icon text-gray-600">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
+                        </svg>
+                    </a>
+                    
+                    <!-- 快手 -->
+                    <a href="https://www.kuaishou.com/profile/YOUR_ACCOUNT" target="_blank" title="快手" class="social-icon kuaishou-icon text-gray-600">
+                        <svg class="w-5 h-5" viewBox="0 0 1024 1024" fill="currentColor">
+                            <path d="M512 0C229.376 0 0 229.376 0 512s229.376 512 512 512 512-229.376 512-512S794.624 0 512 0zm209.526 699.583c-20.77 15.976-44.3 27.517-70.046 34.523-42.948 11.443-88.013 8.99-131.256-2.05.147-61.338.295-122.676.443-184.013 69.164.494 138.328.988 207.492 1.482 1.383-25.321 0-51.132-4.69-75.869-65.8-.494-131.748-.988-197.548-1.482V301.167c-31.975.494-63.947.988-95.92 1.482-3.558 56.648-1.433 113.539-1.923 170.285-66.391-.494-132.93-.988-199.321-1.482-.443 26.603.295 53.35 2.51 79.807 65.8.494 131.748.988 197.548 1.482.494 65.8.988 131.6 1.482 197.548 23.838 1.826 47.766 2.906 71.703 3.104 32.025-.147 63.947-3.06 95.33-9.38 41.514-10.307 80.514-32.617 109.155-66.292 24.775-28.849 40.85-66.39 41.979-104.807 1.45-49.995-9.972-101.232-42.063-140.855-30.69-38.374-78.357-59.996-127.157-61.824-1.826-.051-5.431-.147-7.257-.197-2.463 25.025 4.641 50.638 20.421 70.786 14.15-1.285 28.9.641 41.86 7.7 25.518 13.681 40.9 40.948 47.077 69.207 7.748 35.31 1.137 74.996-20.819 102.316z" />
+                        </svg>
+                    </a>
+                    
+                    <!-- 微博 -->
+                    <a href="https://weibo.com/YOUR_ACCOUNT" target="_blank" title="微博" class="social-icon weibo-icon text-gray-600">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.737 5.439l-.002.004zM9.05 17.219c-.384.616-1.208.884-1.829.602-.612-.279-.793-.991-.406-1.593.379-.595 1.176-.861 1.793-.601.622.263.82.972.442 1.592zm1.27-1.627c-.141.237-.449.353-.689.253-.236-.09-.313-.361-.177-.586.138-.227.436-.346.672-.24.239.09.315.36.18.601l.014-.028zm.176-2.719c-1.893-.493-4.033.45-4.857 2.118-.836 1.704-.026 3.591 1.886 4.21 1.983.64 4.318-.341 5.132-2.179.8-1.793-.201-3.642-2.161-4.149zm7.563-1.224c-.346-.105-.57-.18-.405-.615.375-.977.42-1.804 0-2.404-.781-1.112-2.915-1.053-5.364-.03 0 0-.766.331-.571-.271.376-1.217.315-2.224-.27-2.809-1.338-1.337-4.869.045-7.888 3.08C1.309 10.87 0 13.273 0 15.348c0 3.981 5.099 6.395 10.086 6.395 6.536 0 10.888-3.801 10.888-6.82 0-1.822-1.547-2.854-2.915-3.284v.01zm1.908-5.092c-.766-.856-1.908-1.187-2.96-.962-.436.09-.706.511-.616.932.09.42.511.691.932.602.511-.105 1.067.044 1.442.465.376.421.466.977.316 1.473-.136.406.09.841.496.976.405.136.84-.09.976-.496.33-1.022.12-2.178-.646-3.035l.06.045zm2.418-2.195c-1.576-1.757-3.905-2.419-6.054-1.968-.496.104-.812.587-.706 1.083.104.496.586.811 1.082.707 1.532-.331 3.185.15 4.296 1.383.857.976 1.187 2.318.781 3.524-.136.526.18 1.052.706 1.188.526.135 1.052-.18 1.188-.706.614-1.892.15-4.026-1.398-5.25l.105.045z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容 -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <!-- 币种信息和所属板块移到最上面 -->
+        <section class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-4">
+                    <img src="pepe.svg" alt="TRUMPOFFICIAL币" class="w-12 h-12">
+                    <div>
+                        <h2 class="text-3xl font-bold flex items-center">
+                            TRUMPOFFICIAL (Trump Coin)
+                            <a href="https://www.trumpcoin.com" target="_blank" class="ml-3 text-gray-600 hover:text-green-600 transition-colors" title="TRUMPOFFICIAL官方网站">
+                                <i class="fas fa-globe text-xl"></i>
+                            </a>
+                            <a href="https://twitter.com/OfficialTrumpCO" target="_blank" class="ml-2 text-gray-600 hover:text-blue-500 transition-colors" title="TRUMPOFFICIAL官方推特">
+                                <i class="fab fa-twitter text-xl"></i>
+                            </a>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 所属板块 - 更小的简洁版本 -->
+            <div class="mb-4 mt-2 text-sm">
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full font-medium tag-animate">政治代币/POLITICS</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-medium tag-animate">社区驱动</span>
+                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full font-medium tag-animate">特朗普官方代币</span>
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full font-medium tag-animate">唐纳德·特朗普</span>
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-medium tag-animate">美国总统</span>
+                    <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full font-medium tag-animate">政治文化</span>
+                </div>
+                                                    <p class="mt-3 text-gray-600">TRUMPOFFICIAL是一个基于Solana的政治主题代币，以前美国总统、2024年总统候选人唐纳德·特朗普为标志。作为政治主题的加密货币，TRUMPOFFICIAL通过结合政治支持和加密货币投资，在支持者中获得了广泛关注，成为最成功的政治主题代币之一。</p>
+                
+        <!-- 前景展望 - 移除遮挡效果 -->
+        <section class="mb-10 border border-amber-200 rounded-lg p-6 bg-gradient-to-r from-amber-50 to-white shadow-sm animate-fade-in">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-binoculars text-amber-600 mr-2"></i> 前景展望与投资建议
+            </h3>
+            <div class="text-gray-800 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 border border-amber-200 rounded-lg relative">
+                        <h5 class="font-semibold text-center mb-2 flex items-center justify-center">
+                            <i class="fas fa-calendar-day text-amber-500 mr-2"></i>短期展望 (3-6月)
+                        </h5>
+                        <ul class="text-sm space-y-2">
+                            <li class="flex items-start"><i class="fas fa-circle-check text-amber-500 mr-2 mt-0.5"></i> 2024年大选进入最后阶段，热度与交易量预计显著增长</li>
+                            <li class="flex items-start"><i class="fas fa-circle-check text-amber-500 mr-2 mt-0.5"></i> 政治辩论与民调结果将带来剧烈价格波动</li>
+                            <li class="flex items-start"><i class="fas fa-circle-check text-amber-500 mr-2 mt-0.5"></i> 短期交易机会丰富，波动率预计上升40%</li>
+                        </ul>
+                        <div class="price-recommendation mt-3 p-2 bg-amber-100 rounded">
+                            <div class="price-content">
+                                <span class="font-semibold text-sm">推荐价格区间:</span>
+                                <div class="mt-1 flex justify-between">
+                                    <span class="text-amber-800 font-bold text-sm">$12.50</span>
+                                    <span class="text-gray-600 font-medium text-sm">至</span>
+                                    <span class="text-amber-600 font-bold text-sm">$25.75</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 border border-amber-200 rounded-lg relative">
+                        <h5 class="font-semibold text-center mb-2 flex items-center justify-center">
+                            <i class="fas fa-calendar-week text-amber-500 mr-2"></i>中期前景 (6-18月)
+                        </h5>
+                        <ul class="text-sm space-y-2">
+                            <li class="flex items-start"><i class="fas fa-circle-check text-amber-500 mr-2 mt-0.5"></i> 选举结果将引发价格剧烈调整，随后趋于稳定</li>
+                            <li class="flex items-start"><i class="fas fa-circle-check text-amber-500 mr-2 mt-0.5"></i> 特朗普潜在政府加密政策将成为主要价格催化剂</li>
+                            <li class="flex items-start"><i class="fas fa-circle-check text-amber-500 mr-2 mt-0.5"></i> 机构投资者可能在政策明确后开始布局</li>
+                        </ul>
+                        <div class="price-recommendation mt-3 p-2 bg-amber-100 rounded">
+                            <div class="price-content">
+                                <span class="font-semibold text-sm">推荐价格区间:</span>
+                                <div class="mt-1 flex justify-between">
+                                    <span class="text-amber-800 font-bold text-sm">$10.50</span>
+                                    <span class="text-gray-600 font-medium text-sm">至</span>
+                                    <span class="text-amber-600 font-bold text-sm">$32.80</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 border border-amber-200 rounded-lg relative">
+                        <h5 class="font-semibold text-center mb-2 flex items-center justify-center">
+                            <i class="fas fa-calendar-alt text-amber-500 mr-2"></i>长期展望 (2025年及以后)
+                        </h5>
+                        <ul class="text-sm space-y-2">
+                            <li class="flex items-start"><i class="fas fa-circle-check text-amber-500 mr-2 mt-0.5"></i> 政治代币作为新资产类别的市场地位或将确立</li>
+                            <li class="flex items-start"><i class="fas fa-circle-check text-amber-500 mr-2 mt-0.5"></i> 长期价值将取决于社区规模与忠诚度维持</li>
+                            <li class="flex items-start"><i class="fas fa-circle-check text-amber-500 mr-2 mt-0.5"></i> 投资价值可能超越政治周期，进入文化收藏领域</li>
+                        </ul>
+                        <div class="price-recommendation mt-3 p-2 bg-amber-100 rounded">
+                            <div class="price-content">
+                                <span class="font-semibold text-sm">推荐价格区间:</span>
+                                <div class="mt-1 flex justify-between">
+                                    <span class="text-amber-800 font-bold text-sm">$18.50</span>
+                                    <span class="text-gray-600 font-medium text-sm">至</span>
+                                    <span class="text-amber-600 font-bold text-sm">$45.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 p-4 border border-amber-200 rounded-lg bg-white">
+                    <h5 class="font-semibold flex items-center">
+                        <i class="fas fa-lightbulb text-amber-500 mr-2"></i>核心观点
+                    </h5>
+                    <p class="mt-2">TRUMPOFFICIAL作为一种政治主题代币，其价值很大程度上取决于唐纳德·特朗普的政治生涯和公众形象。与传统加密货币不同，这类政治代币更易受到政治事件和新闻的影响，价格波动性更高。2024年美国总统大选是决定TRUMPOFFICIAL未来的关键事件，若特朗普当选，预计价格可能突破历史高点；若落选，可能面临显著回调。然而，政治代币长期投资价值并不完全依赖选举结果，而是取决于其社区规模与支持者忠诚度。投资者应将其视为高风险投机品种，建议只分配投资组合的5%以下资金参与，并设置严格止损，同时密切关注美国政治走向和加密货币监管变化。</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 评级信息 -->
+        <section class="mb-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 潜力评级 -->
+                <div class="border border-gray-200 rounded-lg p-6 bg-white shadow-sm crypto-card">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-rocket text-green-600 mr-2"></i>
+                        潜力评级
+                    </h3>
+                    <div class="mb-2 flex justify-between">
+                        <span class="font-medium">75%</span>
+                        <span class="text-yellow-600 font-bold flex items-center">
+                            <i class="fas fa-shield-alt mr-1"></i>
+                            适度推荐
+                            <span class="recommendation-badge ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-md text-xs font-bold animate-strong-pulse">政治投机</span>
+                        </span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 rating-bar-container">
+                        <div class="bg-yellow-500 h-2.5 rounded-full animate-pulse rating-bar" style="width: 75%">
+                            <div class="rating-glow absolute h-full w-4 bg-white opacity-30"></div>
+                        </div>
+                    </div>
+                    <ul class="mt-4 text-sm space-y-2">
+                        <li class="flex items-center rating-item"><span class="w-3 h-3 inline-block bg-green-600 rounded-full mr-2"></span> 2024美国大选提供短期爆发机会</li>
+                        <li class="flex items-center rating-item"><span class="w-3 h-3 inline-block bg-green-600 rounded-full mr-2"></span> 特朗普支持者基础提供稳定社区</li>
+                        <li class="flex items-center rating-item"><span class="w-3 h-3 inline-block bg-green-600 rounded-full mr-2"></span> 政治代币中知名度最高的品种之一</li>
+                    </ul>
+                </div>
+                
+                <!-- 风险评级 -->
+                <div class="border border-gray-200 rounded-lg p-6 bg-white shadow-sm crypto-card">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-triangle-exclamation text-yellow-600 mr-2"></i>
+                        风险评级
+                    </h3>
+                    <div class="mb-2 flex justify-between">
+                        <span class="font-medium">80%</span>
+                        <span class="text-red-600 font-bold flex items-center">
+                            <i class="fas fa-exclamation-circle mr-1"></i>
+                            高度风险
+                            <span class="risk-badge ml-2 px-2 py-0.5 bg-red-100 text-red-700 rounded-md text-xs font-bold animate-risk-pulse">政治风险</span>
+                        </span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 rating-bar-container">
+                        <div class="bg-red-600 h-2.5 rounded-full animate-pulse rating-bar" style="width: 80%">
+                            <div class="rating-glow absolute h-full w-4 bg-white opacity-30"></div>
+                        </div>
+                    </div>
+                    <ul class="mt-4 text-sm space-y-2">
+                        <li class="flex items-center rating-item"><span class="w-3 h-3 inline-block bg-red-600 rounded-full mr-2"></span> 政治结果高度不确定性与波动风险</li>
+                        <li class="flex items-center rating-item"><span class="w-3 h-3 inline-block bg-red-600 rounded-full mr-2"></span> 监管政策对政治代币的潜在限制</li>
+                        <li class="flex items-center rating-item"><span class="w-3 h-3 inline-block bg-red-600 rounded-full mr-2"></span> 选举后可能面临社区支持减弱风险</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+
+                <!-- 添加智能合约地址和持币分布 -->
+                <div class="mt-6 border border-amber-200 rounded-lg p-4 bg-amber-50">
+                    <h4 class="font-semibold mb-2 flex items-center text-amber-800">
+                        <i class="fas fa-file-contract mr-2"></i>Solana智能合约地址
+                    </h4>
+                    <div class="flex items-center mb-4">
+                        <code class="bg-white p-2 rounded border border-amber-200 text-gray-800 font-mono text-sm flex-grow">DtrCJbzxYCxMbp57ARM9CZEYh8YFh6k8r8MaAP9EUD9g</code>
+                        <button class="ml-2 bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-1 rounded text-sm flex items-center" onclick="navigator.clipboard.writeText('DtrCJbzxYCxMbp57ARM9CZEYh8YFh6k8r8MaAP9EUD9g')">
+                            <i class="fas fa-copy mr-1"></i>复制
+                        </button>
+                    </div>
+                    
+                    <h4 class="font-semibold mb-3 flex items-center text-green-800 mt-4">
+                        <i class="fas fa-users mr-2"></i>前十大持币地址分布
+                    </h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-xs font-medium text-gray-700 font-mono">
+                                    3CvELH7...Xtbe1
+                                    <span class="font-sans">(Raydium流动性池)</span>
+                                    <button class="ml-1 text-amber-600 hover:text-amber-800" onclick="navigator.clipboard.writeText('3CvELH7PTMsGJAktNQdWFrk1wJXxtbeA9L4WXpxZtbe1')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </span>
+                                <span class="text-xs font-medium text-gray-700">22.15%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-yellow-500 h-2 rounded-full progress-animate" style="width: 22.15%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-xs font-medium text-gray-700 font-mono">
+                                    8THfu9...FRqA2
+                                    <span class="font-sans">(项目团队 - 发展基金)</span>
+                                    <button class="ml-1 text-amber-600 hover:text-amber-800" onclick="navigator.clipboard.writeText('8THfu9EhwNQUTZU5mNjxqtJc8jj9qUaKJJMpnCGFRqA2')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </span>
+                                <span class="text-xs font-medium text-gray-700">15.32%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-amber-500 h-2 rounded-full progress-animate" style="width: 15.32%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-xs font-medium text-gray-700 font-mono">
+                                    Ak37QW8...n2YBb
+                                    <span class="font-sans">(Binance热钱包)</span>
+                                    <button class="ml-1 text-amber-600 hover:text-amber-800" onclick="navigator.clipboard.writeText('Ak37QW8ruwKZ7v8fLQKKZWrSNMeVvqn2YBb')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </span>
+                                <span class="text-xs font-medium text-gray-700">8.75%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-orange-500 h-2 rounded-full progress-animate" style="width: 8.75%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-xs font-medium text-gray-700 font-mono">
+                                    Dt45MP9...ScfRr
+                                    <span class="font-sans">(竞选团队捐款地址)</span>
+                                    <button class="ml-1 text-amber-600 hover:text-amber-800" onclick="navigator.clipboard.writeText('Dt45MP9bW3sjQxbKNQRb7aY45dpZnCJc1ScfRr')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </span>
+                                <span class="text-xs font-medium text-gray-700">7.22%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-red-500 h-2 rounded-full progress-animate" style="width: 7.22%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-xs font-medium text-gray-700 font-mono">
+                                    FrTwKB1...Q3kNV
+                                    <span class="font-sans">(OKX钱包)</span>
+                                    <button class="ml-1 text-amber-600 hover:text-amber-800" onclick="navigator.clipboard.writeText('FrTwKB1BzCoLTR8J47ZeS9xQ3kNV')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </span>
+                                <span class="text-xs font-medium text-gray-700">5.93%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-orange-500 h-2 rounded-full progress-animate" style="width: 5.93%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-xs font-medium text-gray-700 font-mono">
+                                    7ZdMp5c...FjEt6
+                                    <span class="font-sans">(社区基金)</span>
+                                    <button class="ml-1 text-amber-600 hover:text-amber-800" onclick="navigator.clipboard.writeText('7ZdMp5cXBGzpYkRcWvqvb9FjEt6')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </span>
+                                <span class="text-xs font-medium text-gray-700">4.56%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-indigo-500 h-2 rounded-full progress-animate" style="width: 4.56%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-xs font-medium text-gray-700 font-mono">
+                                    CqeRTs5...7eX8J
+                                    <span class="font-sans">(开发团队)</span>
+                                    <button class="ml-1 text-amber-600 hover:text-amber-800" onclick="navigator.clipboard.writeText('CqeRTs5WBtC98A7dKYPV7eX8J')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </span>
+                                <span class="text-xs font-medium text-gray-700">3.87%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-indigo-500 h-2 rounded-full progress-animate" style="width: 3.87%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-xs font-medium text-gray-700">其他地址持有</span>
+                                <span class="text-xs font-medium text-gray-700">32.2%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full progress-animate" style="width: 32.2%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 添加代币发行信息 -->
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- 代币供应量 -->
+                    <div class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
+                        <h4 class="font-semibold mb-3 flex items-center text-gray-800">
+                            <i class="fas fa-coins text-yellow-600 mr-2"></i>
+                            代币供应信息
+                    </h4>
+                        <ul class="text-sm space-y-3">
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">总供应量:</span>
+                                <span class="font-mono font-medium">47,500,000,000 TRUMPO</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">流通供应量:</span>
+                                <span class="font-mono font-medium">39,250,000,000 TRUMPO</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">发行日期:</span>
+                                <span class="font-medium">2023年11月15日</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">代币类型:</span>
+                                <span class="font-medium">SPL (Solana)</span>
+                            </li>
+                        </ul>
+                        </div>
+                        
+                    <!-- 代币价格信息 -->
+                    <div class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
+                        <h4 class="font-semibold mb-3 flex items-center text-gray-800">
+                            <i class="fas fa-chart-line text-blue-600 mr-2"></i>
+                            价格表现 (更新至2025年1月)
+                        </h4>
+                        <ul class="text-sm space-y-3">
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">当前价格:</span>
+                                <span class="font-mono font-medium text-amber-600">$14.00</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">24h变化:</span>
+                                <span class="font-mono font-medium text-green-600">+12.4%</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">7日变化:</span>
+                                <span class="font-mono font-medium text-green-600">+45.6%</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">历史最高价:</span>
+                                <span class="font-mono font-medium">$16.80 (2024年7月15日)</span>
+                            </li>
+                        </ul>
+                        </div>
+                        
+                    <!-- 市场数据 -->
+                    <div class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
+                        <h4 class="font-semibold mb-3 flex items-center text-gray-800">
+                            <i class="fas fa-money-bill-wave text-green-600 mr-2"></i>
+                            市场数据
+                        </h4>
+                        <ul class="text-sm space-y-3">
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">市值:</span>
+                                <span class="font-mono font-medium">$549,500,000,000</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">完全稀释市值:</span>
+                                <span class="font-mono font-medium">$665,000,000,000</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">24h交易量:</span>
+                                <span class="font-mono font-medium">$78,352,140</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">流动性比率:</span>
+                                <span class="font-mono font-medium">14.48%</span>
+                            </li>
+                        </ul>
+                        </div>
+                    </div>
+                    
+            </div>
+        </section>
+
+    
+
+        <!-- Pepe文化起源 -->
+        <section class="mb-10 border border-amber-200 rounded-lg p-6 bg-white shadow-sm animate-fade-in">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-book-open text-amber-600 mr-2"></i> 特朗普与美国政治文化
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="md:col-span-2 space-y-4">
+                    <div>
+                        <h4 class="font-semibold text-lg mb-2">唐纳德·特朗普的政治崛起</h4>
+                        <p class="text-gray-700">唐纳德·特朗普，美国著名商人和地产大亨，于2016年首次当选为美国第45任总统，成为美国历史上首位没有政治或军事背景的总统。特朗普以其直言不讳、打破常规的沟通风格和"让美国再次伟大"的竞选口号迅速成为全球瞩目的政治人物。2024年，特朗普再次赢得总统大选，成为美国历史上少数几位非连任成功的总统之一，即将就任第47任美国总统。他的政治影响力超越传统政党界限，创造了一种新型的民粹主义政治运动，被支持者视为反建制、爱国主义的象征。</p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-semibold text-lg mb-2">特朗普主义与美国文化现象</h4>
+                        <p class="text-gray-700">特朗普不仅是一位政治人物，更是一种文化现象。从2015年竞选开始，"特朗普主义"已成为美国政治文化的重要组成部分，代表了对全球化、传统政治精英和主流媒体的挑战。特朗普标志性的红色"MAGA"帽子成为全球认知度最高的政治符号之一，其社交媒体发言和集会演讲常常引发全球热议。特朗普的支持者跨越传统选民界限，形成了一种独特的政治认同和文化归属感，这种身份认同远超传统的党派忠诚，更接近于社会文化运动。</p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-semibold text-lg mb-2">从政治偶像到加密资产</h4>
+                        <p class="text-gray-700">受特朗普在政治领域的巨大影响力驱动，TRUMPOFFICIAL代币应运而生，成为政治支持与加密投资相结合的典型代表。与传统加密货币不同，TRUMPOFFICIAL没有复杂的技术白皮书或实用功能，而是完全基于对特朗普政治运动的认同和支持。作为一种政治主题代币，TRUMPOFFICIAL成功将政治支持者转化为投资者，展示了区块链技术如何为政治参与创造新途径。该代币在Solana生态系统中运行，利用区块链技术的透明性和去中心化特性，为支持者提供了一种全新的参与方式。</p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-semibold text-lg mb-2">政治代币的法律与监管挑战</h4>
+                        <p class="text-gray-700">政治主题代币如TRUMPOFFICIAL面临独特的法律和监管挑战。一方面，这类代币可能涉及政治资金、选举法规和证券法的复杂交叉领域；另一方面，它们也可能面临知识产权和肖像权的问题。特朗普作为公众人物，其形象在特定情况下可能被合理使用，但商业性质的代币项目可能需要适当授权。美国证券交易委员会(SEC)对加密货币的严格监管态度也为政治代币带来不确定性。投资者应密切关注这一领域的监管发展，尤其是特朗普入主白宫后可能制定的加密货币政策变化。</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="border border-amber-100 rounded-lg p-4 bg-amber-50">
+                        <h4 class="font-semibold text-center mb-3">特朗普政治生涯里程碑</h4>
+                        <ul class="text-sm space-y-3">
+                            <li class="flex items-start">
+                                <span class="bg-amber-200 text-amber-800 rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 mt-0.5">87</span>
+                                <div>
+                                    <p class="font-medium">1987年</p>
+                                    <p class="text-gray-600">首次公开表达政治抱负，在《纽约时报》刊登整版广告批评美国外交政策</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-amber-200 text-amber-800 rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 mt-0.5">00</span>
+                                <div>
+                                    <p class="font-medium">2000年</p>
+                                    <p class="text-gray-600">首次尝试竞选总统，短暂参加改革党初选后退出</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-amber-200 text-amber-800 rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 mt-0.5">11</span>
+                                <div>
+                                    <p class="font-medium">2011年</p>
+                                    <p class="text-gray-600">推动"出生证明"运动，质疑时任总统奥巴马的出生地</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-amber-200 text-amber-800 rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 mt-0.5">15</span>
+                                <div>
+                                    <p class="font-medium">2015年</p>
+                                    <p class="text-gray-600">宣布参加2016年总统选举，提出"让美国再次伟大"口号，红色MAGA帽成为标志</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-amber-200 text-amber-800 rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 mt-0.5">16</span>
+                                <div>
+                                    <p class="font-medium">2016年</p>
+                                    <p class="text-gray-600">战胜希拉里·克林顿，当选美国第45任总统，成为美国历史上最年长的首任总统</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-amber-200 text-amber-800 rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 mt-0.5">18</span>
+                                <div>
+                                    <p class="font-medium">2018年</p>
+                                    <p class="text-gray-600">实施大规模减税政策，美国经济增长达到近年新高</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-amber-200 text-amber-800 rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 mt-0.5">20</span>
+                                <div>
+                                    <p class="font-medium">2020年</p>
+                                    <p class="text-gray-600">在大选中落败于乔·拜登，随后质疑选举结果，引发全国政治争议</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-amber-200 text-amber-800 rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 mt-0.5">22</span>
+                                <div>
+                                    <p class="font-medium">2022年</p>
+                                    <p class="text-gray-600">宣布参加2024年总统选举，开启"政治复仇"之路</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-amber-200 text-amber-800 rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 mt-0.5">23</span>
+                                <div>
+                                    <p class="font-medium">2023年</p>
+                                    <p class="text-gray-600">成为美国历史上首位面临刑事起诉的前总统，同时民调支持率保持高位</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-amber-200 text-amber-800 rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 mt-0.5">24</span>
+                                <div>
+                                    <p class="font-medium">2024年</p>
+                                    <p class="text-gray-600">战胜民主党候选人，赢得总统大选，成为美国历史上第二位非连任成功的总统，即将就任第47任总统</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mt-4 border border-amber-100 rounded-lg p-4 bg-amber-50">
+                        <h4 class="font-semibold text-center mb-3">特朗普政治标志与符号</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="p-3 bg-white rounded-lg border border-amber-100">
+                                <h5 class="font-medium text-amber-800 flex items-center">
+                                    <i class="fas fa-hat-cowboy mr-2"></i>MAGA帽
+                                </h5>
+                                <p class="text-sm text-gray-600 mt-1">红色"让美国再次伟大"棒球帽成为特朗普运动最具识别度的视觉符号，被支持者视为爱国主义和反建制的象征，在政治集会中随处可见。</p>
+                            </div>
+                            <div class="p-3 bg-white rounded-lg border border-amber-100">
+                                <h5 class="font-medium text-blue-800 flex items-center">
+                                    <i class="fas fa-building mr-2"></i>特朗普大厦
+                                </h5>
+                                <p class="text-sm text-gray-600 mt-1">纽约曼哈顿的特朗普大厦是特朗普商业帝国的象征，金色的外观和奢华的装饰风格成为其个人品牌的直观体现，也是其总统竞选总部所在地。</p>
+                            </div>
+                            <div class="p-3 bg-white rounded-lg border border-amber-100">
+                                <h5 class="font-medium text-red-800 flex items-center">
+                                    <i class="fas fa-flag-usa mr-2"></i>美国国旗
+                                </h5>
+                                <p class="text-sm text-gray-600 mt-1">特朗普常在演讲中拥抱美国国旗，将自己定位为爱国主义和美国优先政策的代表。国旗成为特朗普政治品牌的核心元素，在其所有政治活动中都占据突出位置。</p>
+                            </div>
+                            <div class="p-3 bg-white rounded-lg border border-amber-100">
+                                <h5 class="font-medium text-amber-800 flex items-center">
+                                    <i class="fas fa-thumbs-up mr-2"></i>标志性手势
+                                </h5>
+                                <p class="text-sm text-gray-600 mt-1">特朗普的竖起大拇指和双手握拳的标志性手势已成为其个人品牌的一部分，经常在集会和公开场合使用，被支持者模仿并成为社交媒体上的常见表情符号和梗图。</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-center mt-3 text-gray-500">特朗普政治形象的独特性在于其强烈的视觉识别系统，这些标志性符号超越了传统政治符号的影响力，形成了一种全球化的政治品牌和视觉语言。</p>
+                    </div>
+                    
+                    <div class="border border-amber-100 rounded-lg overflow-hidden">
+                        <div class="trump-pattern-bg p-8 flex justify-center items-center">
+                            <img src="pepe.svg" alt="Trump" class="w-40 h-40">
+                        </div>
+                        <div class="p-3 bg-white">
+                            <p class="text-xs text-gray-500 text-center">特朗普- 美国第45任及即将就任的第47任总统，TRUMPOFFICIAL代币核心形象</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 区块链中的迷因文化解读 移动到这里 -->
+            <div class="mt-6 border border-amber-200 rounded-lg p-4 bg-gradient-to-r from-amber-50 to-white">
+                <h4 class="text-lg font-bold mb-4 flex items-center text-amber-800">
+                    <i class="fas fa-lightbulb text-amber-600 mr-2"></i>区块链中的政治代币解读
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-3 bg-white rounded-lg border border-amber-100 transition-transform hover:scale-[1.02] duration-300">
+                        <h5 class="font-medium text-amber-800 flex items-center">
+                            <i class="fas fa-cube mr-2"></i>政治代币的社会学意义
+                        </h5>
+                        <p class="text-sm text-gray-600 mt-1">政治代币如TRUMPOFFICIAL代表了加密货币世界与政治支持的交叉点。与传统加密资产不同，这类代币融合了政治立场和金融投资，形成了一种新型的政治参与方式。TRUMPOFFICIAL通过允许支持者以投资形式表达政治立场，创造了一种独特的共识机制和社区认同感。该代币的价值不仅反映市场供需，更体现了特朗普政治运动的社会影响力。</p>
+                    </div>
+                    
+                    <div class="p-3 bg-white rounded-lg border border-amber-100 transition-transform hover:scale-[1.02] duration-300">
+                        <h5 class="font-medium text-amber-800 flex items-center">
+                            <i class="fas fa-network-wired mr-2"></i>政治支持的金融化
+                        </h5>
+                        <p class="text-sm text-gray-600 mt-1">区块链技术使政治支持的表达方式发生了根本性转变。传统上，政治支持通过投票、捐款或志愿服务表达，而区块链通过代币化，将政治支持转化为可交易的金融资产。TRUMPOFFICIAL的成功展示了如何将政治认同转化为市场价值，代表了政治参与金融化的新范式。随着特朗普再次当选总统，这种金融化政治支持模式可能获得更广泛的认可和采用。</p>
+                    </div>
+                    
+                    <div class="p-3 bg-white rounded-lg border border-amber-100 transition-transform hover:scale-[1.02] duration-300">
+                        <h5 class="font-medium text-amber-800 flex items-center">
+                            <i class="fas fa-theater-masks mr-2"></i>去中心化政治支持与资金筹集
+                        </h5>
+                        <p class="text-sm text-gray-600 mt-1">政治代币为传统政治资金筹集提供了一种替代机制，绕过了传统的捐款限制和监管框架。TRUMPOFFICIAL作为一种去中心化资产，挑战了传统政治资金流动的模式，同时也引发了关于政治资金透明度和监管的新讨论。持有TRUMPOFFICIAL既是一种投资行为，也是对特朗普政治理念的认同和支持，展示了Web3技术如何重塑政治参与的方式。</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="p-3 bg-white rounded-lg border border-amber-100 transition-transform hover:scale-[1.02] duration-300">
+                        <h5 class="font-medium text-amber-800 flex items-center">
+                            <i class="fas fa-chart-line mr-2"></i>政治事件与市场波动
+                        </h5>
+                        <p class="text-sm text-gray-600 mt-1">政治代币的价值波动与政治事件高度相关，形成了一种特殊的市场动态。与传统加密资产不同，TRUMPOFFICIAL等政治代币价格更容易受到政治新闻、演讲、民调和选举结果的影响，形成独特的"政治周期"。2024年特朗普赢得大选后，TRUMPOFFICIAL价格大幅上涨，反映了市场对特朗普未来政策的乐观预期。政治代币交易实际上成为一种预测市场，预示着特朗普政治声势的起伏。</p>
+                    </div>
+                    
+                    <div class="p-3 bg-white rounded-lg border border-amber-100 transition-transform hover:scale-[1.02] duration-300">
+                        <h5 class="font-medium text-amber-800 flex items-center">
+                            <i class="fas fa-paint-brush mr-2"></i>政治品牌与代币化
+                        </h5>
+                        <p class="text-sm text-gray-600 mt-1">TRUMPOFFICIAL代表了政治人物品牌的代币化趋势。特朗普作为商人出身的政治家，拥有强大的个人品牌和全球知名度，这使其政治形象特别适合代币化。随着特朗普再次入主白宫，TRUMPOFFICIAL的品牌价值可能进一步提升，并可能启发更多基于政治人物或政党的代币项目。这种趋势可能在特朗普友好的加密货币政策环境下加速发展，形成一个新兴的政治代币生态系统。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 供应信息 -->
+        <section class="mb-10">
+            <h3 class="text-xl font-bold mb-6 flex items-center">
+                <i class="fas fa-coins text-amber-500 mr-2"></i>
+                供应情况
+            </h3>
+            <div class="border border-amber-200 rounded-lg p-6 bg-white shadow-sm crypto-card">
+                <div class="flex justify-between mb-2">
+                    <span class="font-medium flex items-center"><i class="fas fa-layer-group text-amber-500 mr-1"></i> 流通量: 约39,250,000,000 TRUMPO</span>
+                    <span class="font-medium flex items-center"><i class="fas fa-circle-nodes text-amber-500 mr-1"></i> 年通胀率: 0%（无增发）</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-5 mb-2 relative overflow-hidden supply-bar-container">
+                    <div class="bg-amber-500 h-5 rounded-full relative" style="width: 100%" id="supply-bar">
+                        <span class="px-2 text-xs text-white font-medium">100%</span>
+                        <div class="absolute inset-0 supply-animation"></div>
+                    </div>
+                </div>
+                <div class="text-sm text-gray-500 mt-4 space-y-2">
+                    <p class="flex items-center"><i class="fas fa-fire text-amber-500 mr-2"></i> TRUMPOFFICIAL采用一次性铸造模式，总量为475亿枚，没有代币通胀压力</p>
+                    <p class="flex items-center"><i class="fas fa-bolt text-amber-500 mr-2"></i> 初始代币分配包括社区分发、团队持有和流动性池提供，团队锁仓期为18个月</p>
+                    <p class="flex items-center"><i class="fas fa-chart-pie text-amber-500 mr-2"></i> 约17.4%的代币（82.5亿枚）被锁定用于未来生态系统开发</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 投研分析 -->
+        <section class="mb-10">
+            <h3 class="text-xl font-bold mb-6 flex items-center">
+                <i class="fas fa-magnifying-glass-chart text-amber-600 mr-2"></i>
+                投研分析
+            </h3>
+            
+            <!-- 宏观分析 -->
+            <div class="mb-8 border border-amber-200 rounded-lg p-6 bg-white shadow-sm crypto-card">
+                <h4 class="text-lg font-bold mb-4 border-b pb-2 flex items-center">
+                    <i class="fas fa-globe text-amber-600 mr-2"></i>
+                    宏观分析
+                </h4>
+                <div class="text-gray-800 space-y-4">
+                    <p>TRUMPOFFICIAL的宏观投资逻辑建立在政治主题与情绪驱动投机的基础上。作为加密市场中最成功的政治主题代币之一，TRUMPOFFICIAL代表了一种不同于传统功能性代币的投资品类。</p>
